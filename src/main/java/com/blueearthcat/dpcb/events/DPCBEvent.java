@@ -55,8 +55,8 @@ public class DPCBEvent implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        if (!(e.getInventory() instanceof DInventory)) return;
-        DInventory inv = (DInventory) e.getInventory();
+        if (!(e.getInventory().getHolder() instanceof DInventory)) return;
+        DInventory inv = (DInventory) e.getInventory().getHolder();
         if (!inv.isValidHandler(plugin)) return;
         switch (inv.getChannel()) {
             case 0:
@@ -195,8 +195,8 @@ public class DPCBEvent implements Listener {
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent e) {
-        if (!(e.getInventory() instanceof DInventory)) return;
-        DInventory inv = (DInventory) e.getInventory();
+        if (!(e.getInventory().getHolder() instanceof DInventory)) return;
+        DInventory inv = (DInventory) e.getInventory().getHolder();
         Player p = (Player) e.getPlayer();
         if (!inv.isValidHandler(plugin)) return;
         if (inv.getChannel() == 0) {// item edit mode save

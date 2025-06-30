@@ -78,7 +78,7 @@ public class DPCBFunction {
         }
         String title = name + lang.get("box_item_title");
         GiftBox box = getBox(name);
-        DInventory inv = new DInventory(null, title, 54, true, plugin);
+        DInventory inv = new DInventory(title, 54, true, plugin);
         inv.setChannel(0);
         int maxPage = box.getMaxPage();
         inv.setPages(maxPage);
@@ -88,7 +88,7 @@ public class DPCBFunction {
         }
         inv.setObj(name);
         inv.update();
-        p.openInventory(inv);
+        p.openInventory(inv.getInventory());
     }
 
     public static ItemStack[] getPageTools(DInventory inv) {
@@ -139,14 +139,14 @@ public class DPCBFunction {
         }
         GiftBox box = getBox(name);
         String title = name + lang.get("box_coupon_title");
-        DInventory inv = new DInventory(null, title, 27, false, plugin);
+        DInventory inv = new DInventory(title, 27, false, plugin);
         for (int i = 0; i < inv.getSize(); i++) { // fill empty space with glass pane
             inv.setItem(i, inv.getPageTools()[0]);
         }
         inv.setItem(13, box.getCouponItem());
         inv.setChannel(1);
         inv.setObj(name);
-        p.openInventory(inv);
+        p.openInventory(inv.getInventory());
     }
 
     public static void saveCouponItem(Player p, String name, DInventory inv) {
@@ -240,7 +240,7 @@ public class DPCBFunction {
         }
         GiftBox box = getBox(name);
         String title = name + lang.get("box_select_title");
-        DInventory inv = new DInventory(null, title, 54, true, plugin);
+        DInventory inv = new DInventory(title, 54, true, plugin);
         inv.setChannel(3);
         int maxPage = box.getMaxPage();
         inv.setPages(maxPage);
@@ -271,7 +271,7 @@ public class DPCBFunction {
             p.getInventory().setItem(35 - i, getBanInteractItem());
         }
         inv.update();
-        p.openInventory(inv);
+        p.openInventory(inv.getInventory());
     }
 
     public static ItemStack getBanInteractItem() {
@@ -333,7 +333,7 @@ public class DPCBFunction {
     }
 
     public static void getBoxList(Player p) {
-        DInventory inv = new DInventory(null, lang.get("box_list_title"), 54, true, plugin);
+        DInventory inv = new DInventory(lang.get("box_list_title"), 54, true, plugin);
         inv.setChannel(2);
         int maxPage = (int) Math.ceil((plugin.boxes.size() / 45.0));
         int count = plugin.boxes.size();
@@ -356,7 +356,7 @@ public class DPCBFunction {
         }
         inv.setPageTools(getPageTools(inv));
         updateCurrentPage(inv);
-        p.openInventory(inv);
+        p.openInventory(inv.getInventory());
     }
 
     public static void saveBoxItems(Player p, String name, DInventory inv) {

@@ -3,13 +3,21 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'com.blueearthcat'
-version = '1.0.0.1'
+group 'com.blueearthcat'
+
+// ##################################################
+
+version = '1.0.0.2'
+var pluginName = 'DP-ConsumeBox'
+var packageName = 'com.blueearthcat.dpcb'
+var apiVersion = '1.14.4'
+
+// ##################################################
+
 compileJava.options.encoding = 'UTF-8'
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
-
 configurations {
     jar.archiveFileName = name + "-" + version + '-SNAPSHOT.jar'
 }
@@ -19,15 +27,15 @@ jar {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            groupId = 'com.blueearthcat.dpcb'
-            artifactId = 'DP-ConsumeBox'
-            artifact 'jars/'+ "DP-ConsumeBox-${version}-SNAPSHOT.jar"
+            groupId = packageName
+            artifactId = pluginName
+            artifact 'jars/'+ pluginName + "-${version}-SNAPSHOT.jar"
             version = "Main-SNAPSHOT"
         }
     }
     repositories {
         maven {
-            url "http://nexus.dpnw.site:8081/repository/dpp/"
+            url System.getenv("REPO_DPP") ?: getProperty("REPO_DPP")
             allowInsecureProtocol = true
         }
     }
@@ -73,18 +81,20 @@ task DS_BUILD {
         buildFile.setText(updatedVersion)
     }
 }
+
 repositories {
     mavenCentral()
     maven {
-        url "http://nexus.dpnw.site:8081/repository/maven-public/"
+        url System.getenv("REPO_PUBLIC") ?: getProperty("REPO_PUBLIC")
         allowInsecureProtocol = true
     }
 }
+
 dependencies {
     implementation 'org.jetbrains:annotations:23.0.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-    compileOnly "com.bukkit:craftbukkit:1.14.4"
-    compileOnly "com.bukkit:spigot:1.14.4"
-    compileOnly "com.darksoldier1404.dppc:DPP-Core:1_14_4-SNAPSHOT"
+    compileOnly "com.bukkit:craftbukkit:" + apiVersion
+    compileOnly "com.bukkit:spigot:" + apiVersion
+    compileOnly "com.darksoldier1404.dppc:DPP-Core:4-SNAPSHOT"
 }
