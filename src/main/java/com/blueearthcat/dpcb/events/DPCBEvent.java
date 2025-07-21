@@ -200,8 +200,7 @@ public class DPCBEvent implements Listener {
         Player p = (Player) e.getPlayer();
         if (!inv.isValidHandler(plugin)) return;
         if (inv.getChannel() == 0) {// item edit mode save
-            ItemStack[] currentPageItems = inv.getContents();
-            inv.setPageContent(inv.getCurrentPage(), currentPageItems);
+            inv.applyChanges();
             DPCBFunction.saveBoxItems((Player) e.getPlayer(), (String) inv.getObj(), inv);
         }
         if (inv.getChannel() == 1) {
