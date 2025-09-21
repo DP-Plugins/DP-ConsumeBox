@@ -8,12 +8,9 @@ import com.darksoldier1404.dppc.data.DataContainer;
 import com.darksoldier1404.dppc.data.DataType;
 import com.darksoldier1404.dppc.utils.PluginUtil;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ConsumeBox extends DPlugin {
     public static ConsumeBox plugin;
-    public static Map<String, GiftBox> boxes = new HashMap<>();
+    public static DataContainer<String, GiftBox> boxes;
 
     public static ConsumeBox getInstance() {
         return plugin;
