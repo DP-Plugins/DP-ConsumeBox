@@ -8,7 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -49,13 +48,7 @@ public class DPCBFunction {
 
 
     public static void saveBox(GiftBox box) {
-        ConfigUtils.saveCustomData(plugin, box.serialize(), box.getName(), "data");
-    }
-
-    public static void saveAllBox() {
-        for (GiftBox b : plugin.boxes.values()) {
-            saveBox(b);
-        }
+        plugin.saveDataContainer();
     }
 
     public static void setGiftBoxItem(Player p, String name) {
@@ -141,6 +134,7 @@ public class DPCBFunction {
             p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_not_exists"));
             return;
         }
+        inv.applyChanges();
         GiftBox box = getBox(name);
         box.setCouponItem(NBT.removeTag(inv.getItem(13), "dpcb_coupon"));
         saveBox(box);
@@ -351,6 +345,7 @@ public class DPCBFunction {
             p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_not_exists"));
             return;
         }
+        inv.applyChanges();
         GiftBox box = getBox(name);
         box.setItems(inv);
         plugin.boxes.put(name, box);
