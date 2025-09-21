@@ -3,6 +3,7 @@ package com.blueearthcat.dpcb.box;
 import com.blueearthcat.dpcb.ConsumeBox;
 import com.blueearthcat.dpcb.box.enums.BoxType;
 import com.darksoldier1404.dppc.api.inventory.DInventory;
+import com.darksoldier1404.dppc.data.DataCargo;
 import com.darksoldier1404.dppc.lang.DLang;
 import com.darksoldier1404.dppc.utils.NBT;
 import org.bukkit.Material;
@@ -12,7 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
-public class GiftBox implements Cloneable{
+public class GiftBox implements DataCargo, Cloneable{
     private String name;
     private BoxType type;
     private int drops = 1;
@@ -40,7 +41,7 @@ public class GiftBox implements Cloneable{
 
     public void setDefaultCouponItem(String name, ItemStack item){
         ItemMeta im = item.getItemMeta();
-        final DLang lang = ConsumeBox.getInstance().data.getLang();
+        final DLang lang = ConsumeBox.getInstance().getLang();
         im.setDisplayName(name + lang.get("default_coupon_name"));
         List<String> lore = new ArrayList<>();
         lore.add(lang.get("default_coupon_lore"));
@@ -87,6 +88,7 @@ public class GiftBox implements Cloneable{
         this.drops = drops;
     }
 
+    @Override
     public YamlConfiguration serialize() {
         YamlConfiguration data = new YamlConfiguration();
         data.set("Box.Name", name);
@@ -106,6 +108,7 @@ public class GiftBox implements Cloneable{
         return data;
     }
 
+    @Override
     public GiftBox deserialize(YamlConfiguration data) {
         GiftBox box = new GiftBox(data.getString("Box.Name"), BoxType.fromString(data.getString("Box.Type")), data.getInt("Box.Drops"));
         box.setMaxPage(data.getInt("Box.MaxPage"));
