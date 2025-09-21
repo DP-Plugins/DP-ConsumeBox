@@ -1,10 +1,8 @@
 package com.blueearthcat.dpcb.events;
 
-import com.blueearthcat.dpcb.ConsumeBox;
 import com.blueearthcat.dpcb.box.GiftBox;
 import com.blueearthcat.dpcb.functions.DPCBFunction;
 import com.darksoldier1404.dppc.api.inventory.DInventory;
-import com.darksoldier1404.dppc.lang.DLang;
 import com.darksoldier1404.dppc.utils.NBT;
 import com.darksoldier1404.dppc.utils.Quadruple;
 import org.bukkit.Bukkit;
@@ -21,13 +19,11 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import static com.blueearthcat.dpcb.ConsumeBox.plugin;
 import static com.blueearthcat.dpcb.box.enums.BoxType.*;
 import static com.blueearthcat.dpcb.functions.DPCBFunction.*;
 
 public class DPCBEvent implements Listener {
-    private static ConsumeBox plugin = ConsumeBox.getInstance();
-    private static String prefix = plugin.data.getPrefix();
-    private static DLang lang = plugin.data.getLang();
 
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
@@ -39,12 +35,12 @@ public class DPCBEvent implements Listener {
             String name = NBT.getStringTag(item, "dpcb_coupon");
             e.setCancelled(true);
             if (!isBoxExist(name)) {
-                e.getPlayer().sendMessage(prefix + lang.get("box_not_exists"));
+                e.getPlayer().sendMessage(plugin.getPrefix() + plugin.getLang().get("box_not_exists"));
                 return;
             }
             GiftBox box = DPCBFunction.getBox(name);
             if (box.getType() == ERROR) {
-                e.getPlayer().sendMessage(prefix + lang.get("box_wrong_type"));
+                e.getPlayer().sendMessage(plugin.getPrefix() + plugin.getLang().get("box_wrong_type"));
                 return;
             }
             givePrize(e.getPlayer(), name, item);
@@ -139,7 +135,7 @@ public class DPCBEvent implements Listener {
                 } else {
                     if (NBT.hasTagKey(item, "dpcb_number")) {
                         if (datas.getD() == 0) {
-                            p.sendMessage(prefix + lang.get("box_max_selected"));
+                            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_max_selected"));
                             return;
                         }
                         p.getInventory().addItem(item);
@@ -152,7 +148,7 @@ public class DPCBEvent implements Listener {
                     }
                     if (NBT.hasTagKey(item, "dpcb_select")) {
                         if (datas.getD() != 0) {
-                            p.sendMessage(prefix + lang.get("box_not_selected"));
+                            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_not_selected"));
                             return;
                         }
                         ItemStack[] backup = datas.getA();
@@ -181,7 +177,7 @@ public class DPCBEvent implements Listener {
                         p.getInventory().setStorageContents(pinv.getStorageContents());
                         datas.setA(null);
                         p.closeInventory();
-                        p.sendMessage(prefix + datas.getB() + lang.get("box_select_give"));
+                        p.sendMessage(plugin.getPrefix() + datas.getB() + plugin.getLang().get("box_select_give"));
                     }
 
                     return;
@@ -218,7 +214,7 @@ public class DPCBEvent implements Listener {
                 for (int i = 0; i < datas.getA().length; i++) {
                     p.getInventory().setItem(i, datas.getA()[i]);
                 }
-                p.sendMessage(prefix + lang.get("box_selected_cancel"));
+                p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_selected_cancel"));
             }
         }
     }

@@ -1,10 +1,8 @@
 package com.blueearthcat.dpcb.functions;
 
-import com.blueearthcat.dpcb.ConsumeBox;
 import com.blueearthcat.dpcb.box.GiftBox;
 import com.blueearthcat.dpcb.box.enums.BoxType;
 import com.darksoldier1404.dppc.api.inventory.DInventory;
-import com.darksoldier1404.dppc.lang.DLang;
 import com.darksoldier1404.dppc.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,36 +17,25 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.util.*;
 
+import static com.blueearthcat.dpcb.ConsumeBox.*;
+
 @SuppressWarnings("static-access")
 public class DPCBFunction {
-    private static final ConsumeBox plugin = ConsumeBox.getInstance();
-    private static DLang lang;
-    private static String prefix;
-
-    public static void init() {
-        plugin.boxes.clear();
-        lang = plugin.data.getLang();
-        prefix = plugin.data.getPrefix();
-        for (YamlConfiguration data : ConfigUtils.loadCustomDataList(plugin, "data")) {
-            GiftBox box = new GiftBox().deserialize(data);
-            plugin.boxes.put(box.getName(), box);
-        }
-    }
 
     public static void createBox(Player p, String name, String type) {
         if (isBoxExist(name)) {
-            p.sendMessage(prefix + lang.get("box_exists"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_exists"));
             return;
         }
         BoxType boxtype = BoxType.fromString(type);
         if (boxtype == BoxType.ERROR) {
-            p.sendMessage(prefix + lang.get("box_wrong_type"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_wrong_type"));
             return;
         }
         GiftBox box = new GiftBox(name, boxtype);
         plugin.boxes.put(name, box);
         saveBox(box);
-        p.sendMessage(prefix + name + lang.get("box_create"));
+        p.sendMessage(plugin.getPrefix() + name + plugin.getLang().get("box_create"));
     }
 
     public static boolean isBoxExist(String name) {
@@ -73,10 +60,10 @@ public class DPCBFunction {
 
     public static void setGiftBoxItem(Player p, String name) {
         if (!isBoxExist(name)) {
-            p.sendMessage(prefix + lang.get("box_not_exists"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_not_exists"));
             return;
         }
-        String title = name + lang.get("box_item_title");
+        String title = name + plugin.getLang().get("box_item_title");
         GiftBox box = getBox(name);
         DInventory inv = new DInventory(title, 54, true, plugin);
         inv.setChannel(0);
@@ -98,15 +85,15 @@ public class DPCBFunction {
         ItemStack pane = NBT.setStringTag(new ItemStack(Material.BLACK_STAINED_GLASS_PANE), "pane", "true");
 
         ItemMeta im = prev.getItemMeta();
-        im.setDisplayName(lang.get("prev_page"));
+        im.setDisplayName(plugin.getLang().get("prev_page"));
         prev.setItemMeta(im);
 
         im = next.getItemMeta();
-        im.setDisplayName(lang.get("next_page"));
+        im.setDisplayName(plugin.getLang().get("next_page"));
         next.setItemMeta(im);
 
         im = current.getItemMeta();
-        im.setDisplayName(lang.get("current_page") + (inv.getCurrentPage() + 1) + "/" + (inv.getPages() + 1));
+        im.setDisplayName(plugin.getLang().get("current_page") + (inv.getCurrentPage() + 1) + "/" + (inv.getPages() + 1));
         current.setItemMeta(im);
 
         im = pane.getItemMeta();
@@ -117,28 +104,28 @@ public class DPCBFunction {
 
     public static void setGiftBoxType(Player p, String name, String type) {
         if (!isBoxExist(name)) {
-            p.sendMessage(prefix + lang.get("box_not_exists"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_not_exists"));
             return;
         }
         GiftBox box = getBox(name);
         BoxType boxtype = BoxType.fromString(type);
         if (boxtype == BoxType.ERROR) {
-            p.sendMessage(prefix + lang.get("box_wrong_type"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_wrong_type"));
             return;
         }
         box.setType(boxtype);
         plugin.boxes.put(name, box);
         saveBox(box);
-        p.sendMessage(prefix + name + lang.get("box_set_type") + type);
+        p.sendMessage(plugin.getPrefix() + name + plugin.getLang().get("box_set_type") + type);
     }
 
     public static void setCouponItem(Player p, String name) {
         if (!isBoxExist(name)) {
-            p.sendMessage(prefix + lang.get("box_not_exists"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_not_exists"));
             return;
         }
         GiftBox box = getBox(name);
-        String title = name + lang.get("box_coupon_title");
+        String title = name + plugin.getLang().get("box_coupon_title");
         DInventory inv = new DInventory(title, 27, false, plugin);
         for (int i = 0; i < inv.getSize(); i++) { // fill empty space with glass pane
             inv.setItem(i, inv.getPageTools()[0]);
@@ -151,23 +138,23 @@ public class DPCBFunction {
 
     public static void saveCouponItem(Player p, String name, DInventory inv) {
         if (!isBoxExist(name)) {
-            p.sendMessage(prefix + lang.get("box_not_exists"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_not_exists"));
             return;
         }
         GiftBox box = getBox(name);
         box.setCouponItem(NBT.removeTag(inv.getItem(13), "dpcb_coupon"));
         saveBox(box);
-        p.sendMessage(prefix + name + lang.get("box_coupon_save"));
+        p.sendMessage(plugin.getPrefix() + name + plugin.getLang().get("box_coupon_save"));
     }
 
     public static void givePrize(Player p, String name, ItemStack cp) {
         if (!isBoxExist(name)) {
-            p.sendMessage(prefix + lang.get("box_not_exists"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_not_exists"));
             return;
         }
         GiftBox box = getBox(name);
         if (box.getItems() == null || box.getItems().isEmpty()) {
-            p.sendMessage(prefix + lang.get("box_no_items"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_no_items"));
             return;
         }
         int drop = box.getDrops();
@@ -182,7 +169,7 @@ public class DPCBFunction {
             }
         }
         if (drop > prizes.size()) {
-            p.sendMessage(prefix + lang.get("box_wrong_drop"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_wrong_drop"));
             return;
         }
         switch (box.getType()) {
@@ -197,7 +184,7 @@ public class DPCBFunction {
                 List<ItemStack> select = prizes.subList(0, drop);
                 ItemStack[] random = select.toArray(new ItemStack[0]);
                 if (!InventoryUtils.hasEnoughSpace(p.getInventory().getStorageContents(), random)) {
-                    p.sendMessage(prefix + lang.get("player_has_no_space"));
+                    p.sendMessage(plugin.getPrefix() + plugin.getLang().get("player_has_no_space"));
                     return;
                 }
                 openSelectGUI(p, name, cp);
@@ -213,11 +200,11 @@ public class DPCBFunction {
         ItemStack[] randomItem = selected.toArray(new ItemStack[0]);
 
         if (!InventoryUtils.hasEnoughSpace(p.getInventory().getStorageContents(), randomItem)) {
-            p.sendMessage(prefix + lang.get("player_has_no_space"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("player_has_no_space"));
             return;
         }
         p.getInventory().addItem(randomItem);
-        p.sendMessage(prefix + name + lang.get("box_random_give"));
+        p.sendMessage(plugin.getPrefix() + name + plugin.getLang().get("box_random_give"));
         cp.setAmount(cp.getAmount() - 1);
     }
 
@@ -225,21 +212,21 @@ public class DPCBFunction {
 
         ItemStack[] allItems = copied.toArray(new ItemStack[0]);
         if (!InventoryUtils.hasEnoughSpace(p.getInventory().getStorageContents(), allItems)) {
-            p.sendMessage(prefix + lang.get("player_has_no_space"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("player_has_no_space"));
             return;
         }
         p.getInventory().addItem(allItems);
-        p.sendMessage(prefix + name + lang.get("box_gift_give"));
+        p.sendMessage(plugin.getPrefix() + name + plugin.getLang().get("box_gift_give"));
         cp.setAmount(cp.getAmount() - 1);
     }
 
     public static void openSelectGUI(Player p, String name, ItemStack cp) {
         if (!isBoxExist(name)) {
-            p.sendMessage(prefix + lang.get("box_not_exists"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_not_exists"));
             return;
         }
         GiftBox box = getBox(name);
-        String title = name + lang.get("box_select_title");
+        String title = name + plugin.getLang().get("box_select_title");
         DInventory inv = new DInventory(title, 54, true, plugin);
         inv.setChannel(3);
         int maxPage = box.getMaxPage();
@@ -277,7 +264,7 @@ public class DPCBFunction {
     public static ItemStack getBanInteractItem() {
         ItemStack item = new ItemStack(Material.BARRIER);
         ItemMeta im = item.getItemMeta();
-        im.setDisplayName(lang.get("box_ban_item"));
+        im.setDisplayName(plugin.getLang().get("box_ban_item"));
         item.setItemMeta(im);
         return NBT.setStringTag(item, "ban", "true");
     }
@@ -285,7 +272,7 @@ public class DPCBFunction {
     public static ItemStack getSelectedItem() {
         ItemStack item = new ItemStack(Material.BARRIER);
         ItemMeta im = item.getItemMeta();
-        im.setDisplayName(lang.get("box_selected_item"));
+        im.setDisplayName(plugin.getLang().get("box_selected_item"));
         item.setItemMeta(im);
         return NBT.setStringTag(item, "ban", "true");
     }
@@ -294,9 +281,9 @@ public class DPCBFunction {
         ItemStack item = NBT.setStringTag(new ItemStack(Material.LIME_STAINED_GLASS_PANE), "dpcb_select", name);
         ItemMeta im = item.getItemMeta();
         List<String> lore = new ArrayList<>();
-        im.setDisplayName(lang.get("box_select_name"));
-        lore.add(lang.get("current_page") + (inv.getCurrentPage() + 1) + "/" + (inv.getPages() + 1));
-        lore.add(lang.get("box_select_lore") + "0 / " + box.getDrops());
+        im.setDisplayName(plugin.getLang().get("box_select_name"));
+        lore.add(plugin.getLang().get("current_page") + (inv.getCurrentPage() + 1) + "/" + (inv.getPages() + 1));
+        lore.add(plugin.getLang().get("box_select_lore") + "0 / " + box.getDrops());
         im.setLore(lore);
         item.setItemMeta(im);
         return item;
@@ -313,27 +300,27 @@ public class DPCBFunction {
 
     public static void giveGiftBox(CommandSender sender, String name, Player receiver, boolean silence) {
         if (receiver == null) {
-            sender.sendMessage(prefix + lang.get("player_wrong"));
+            sender.sendMessage(plugin.getPrefix() + plugin.getLang().get("player_wrong"));
             return;
         }
         if (!isBoxExist(name)) {
-            sender.sendMessage(prefix + lang.get("box_not_exists"));
+            sender.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_not_exists"));
             return;
         }
         GiftBox box = getBox(name);
         ItemStack item = box.getCouponItem();
         if (!InventoryUtils.hasEnoughSpace(receiver.getInventory().getStorageContents(), item)) {
-            sender.sendMessage(prefix + lang.get("player_has_no_space"));
+            sender.sendMessage(plugin.getPrefix() + plugin.getLang().get("player_has_no_space"));
             return;
         }
         receiver.getInventory().addItem(item);
         if (silence) return;
-        sender.sendMessage(prefix + name + lang.get("box_give_coupon"));
-        receiver.sendMessage(prefix + name + lang.get("box_receive_coupon"));
+        sender.sendMessage(plugin.getPrefix() + name + plugin.getLang().get("box_give_coupon"));
+        receiver.sendMessage(plugin.getPrefix() + name + plugin.getLang().get("box_receive_coupon"));
     }
 
     public static void getBoxList(Player p) {
-        DInventory inv = new DInventory(lang.get("box_list_title"), 54, true, plugin);
+        DInventory inv = new DInventory(plugin.getLang().get("box_list_title"), 54, true, plugin);
         inv.setChannel(2);
         int maxPage = (int) Math.ceil((plugin.boxes.size() / 45.0));
         int count = plugin.boxes.size();
@@ -346,7 +333,7 @@ public class DPCBFunction {
                 ItemStack item = box.getCouponItem().clone();
                 ItemMeta im = item.getItemMeta();
                 List<String> lore = im.getLore() == null ? new ArrayList<>() : im.getLore();
-                lore.add(lang.get("box_list_name") + box.getName());
+                lore.add(plugin.getLang().get("box_list_name") + box.getName());
                 im.setLore(lore);
                 item.setItemMeta(im);
                 contents[i] = item;
@@ -361,21 +348,21 @@ public class DPCBFunction {
 
     public static void saveBoxItems(Player p, String name, DInventory inv) {
         if (!isBoxExist(name)) {
-            p.sendMessage(prefix + lang.get("box_not_exists"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_not_exists"));
             return;
         }
         GiftBox box = getBox(name);
         box.setItems(inv);
         plugin.boxes.put(name, box);
         saveBox(box);
-        p.sendMessage(prefix + name + lang.get("box_item_save"));
+        p.sendMessage(plugin.getPrefix() + name + plugin.getLang().get("box_item_save"));
     }
 
     public static void updateCurrentPage(DInventory inv) {
         ItemStack[] tools = inv.getPageTools();
         ItemStack cpage = tools[4];
         ItemMeta im = cpage.getItemMeta();
-        im.setDisplayName(lang.get("current_page") + (inv.getCurrentPage() + 1) + "/" + (inv.getPages() + 1));
+        im.setDisplayName(plugin.getLang().get("current_page") + (inv.getCurrentPage() + 1) + "/" + (inv.getPages() + 1));
         cpage.setItemMeta(im);
         inv.setPageTools(tools);
         inv.update();
@@ -387,8 +374,8 @@ public class DPCBFunction {
         ItemStack cpage = tools[4];
         ItemMeta im = cpage.getItemMeta();
         List<String> lore = im.getLore();
-        lore.set(0, lang.get("current_page") + (inv.getCurrentPage() + 1) + "/" + (inv.getPages() + 1));
-        lore.set(1, lang.get("box_select_lore") + (box.getDrops() - drop) + " / " + box.getDrops());
+        lore.set(0, plugin.getLang().get("current_page") + (inv.getCurrentPage() + 1) + "/" + (inv.getPages() + 1));
+        lore.set(1, plugin.getLang().get("box_select_lore") + (box.getDrops() - drop) + " / " + box.getDrops());
         im.setLore(lore);
         cpage.setItemMeta(im);
         inv.setPageTools(tools);
@@ -396,12 +383,12 @@ public class DPCBFunction {
 
     public static void deleteGiftBox(Player p, String name) {
         if (!isBoxExist(name)) {
-            p.sendMessage(prefix + lang.get("box_not_exists"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_not_exists"));
             return;
         }
         plugin.boxes.remove(name);
         new File(plugin.getDataFolder() + "/data/" + name + ".yml").delete();
-        p.sendMessage(prefix + name + lang.get("box_delete"));
+        p.sendMessage(plugin.getPrefix() + name + plugin.getLang().get("box_delete"));
     }
 
     public static void setGiftBoxDrop(Player p, String name, String var) {
@@ -409,11 +396,11 @@ public class DPCBFunction {
         try {
             drop = Integer.parseInt(var);
         } catch (NumberFormatException e) {
-            p.sendMessage(prefix + lang.get("box_wrong_drop"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_wrong_drop"));
             return;
         }
         if (!isBoxExist(name)) {
-            p.sendMessage(prefix + lang.get("box_not_exists"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_not_exists"));
             return;
         }
 
@@ -425,13 +412,13 @@ public class DPCBFunction {
         }
         int maxSize = box.getMaxPage() * 45 + size;
         if (drop <= 0 || drop > maxSize) {
-            p.sendMessage(prefix + lang.get("box_big_or_small_drop"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_big_or_small_drop"));
             return;
         }
         box.setDrops(drop);
         plugin.boxes.put(name, box);
         saveBox(box);
-        p.sendMessage(prefix + name + lang.get("box_drop_set"));
+        p.sendMessage(plugin.getPrefix() + name + plugin.getLang().get("box_drop_set"));
 
     }
 
@@ -440,15 +427,15 @@ public class DPCBFunction {
         try {
             page = Integer.parseInt(var);
             if (page < 0){
-                p.sendMessage(prefix + lang.get("box_wrong_page"));
+                p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_wrong_page"));
                 return;
             }
         } catch (NumberFormatException e) {
-            p.sendMessage(prefix + lang.get("box_wrong_page"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_wrong_page"));
             return;
         }
         if (!isBoxExist(name)) {
-            p.sendMessage(prefix + lang.get("box_not_exists"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("box_not_exists"));
             return;
         }
         GiftBox box = getBox(name);
@@ -462,7 +449,7 @@ public class DPCBFunction {
         box.setMaxPage(page);
         plugin.boxes.put(name, box);
         saveBox(box);
-        p.sendMessage(prefix + name + lang.get("box_page_set"));
+        p.sendMessage(plugin.getPrefix() + name + plugin.getLang().get("box_page_set"));
 
     }
 

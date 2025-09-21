@@ -3,40 +3,42 @@ package com.blueearthcat.dpcb;
 import com.blueearthcat.dpcb.box.GiftBox;
 import com.blueearthcat.dpcb.commands.DPCBCommand;
 import com.blueearthcat.dpcb.events.DPCBEvent;
-import com.blueearthcat.dpcb.functions.DPCBFunction;
-import com.darksoldier1404.dppc.utils.DataContainer;
+import com.darksoldier1404.dppc.data.DPlugin;
+import com.darksoldier1404.dppc.data.DataContainer;
+import com.darksoldier1404.dppc.data.DataType;
 import com.darksoldier1404.dppc.utils.PluginUtil;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ConsumeBox extends JavaPlugin {
-    private static ConsumeBox plugin;
-    public static DataContainer data;
+public class ConsumeBox extends DPlugin {
+    public static ConsumeBox plugin;
     public static Map<String, GiftBox> boxes = new HashMap<>();
 
     public static ConsumeBox getInstance() {
         return plugin;
     }
 
+    public ConsumeBox() {
+        super(true);
+        plugin = this;
+    }
+
     @Override
     public void onLoad() {
-        plugin = this;
+        init();
         PluginUtil.addPlugin(plugin, 25979);
+        boxes = loadDataContainer(new DataContainer<String, GiftBox>(this, DataType.CUSTOM, "data"), GiftBox.class);
     }
 
     @Override
     public void onEnable() {
-        plugin.data = new DataContainer(plugin, true);
-        DPCBFunction.init();
         plugin.getServer().getPluginManager().registerEvents(new DPCBEvent(), plugin);
         getCommand("dpcb").setExecutor(new DPCBCommand().getExecuter());
     }
 
     @Override
     public void onDisable() {
-        data.save();
-        DPCBFunction.saveAllBox();
+        saveDataContainer();
     }
 }
