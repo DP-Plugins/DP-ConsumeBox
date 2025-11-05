@@ -3,11 +3,13 @@ package com.blueearthcat.dpcb;
 import com.blueearthcat.dpcb.box.GiftBox;
 import com.blueearthcat.dpcb.commands.DPCBCommand;
 import com.blueearthcat.dpcb.events.DPCBEvent;
+import com.darksoldier1404.dppc.annotation.DPPCoreVersion;
 import com.darksoldier1404.dppc.data.DPlugin;
 import com.darksoldier1404.dppc.data.DataContainer;
 import com.darksoldier1404.dppc.data.DataType;
 import com.darksoldier1404.dppc.utils.PluginUtil;
 
+@DPPCoreVersion(since = "5.3.0")
 public class ConsumeBox extends DPlugin {
     public static ConsumeBox plugin;
     public static DataContainer<String, GiftBox> boxes;
@@ -19,13 +21,13 @@ public class ConsumeBox extends DPlugin {
     public ConsumeBox() {
         super(true);
         plugin = this;
+        init();
     }
 
     @Override
     public void onLoad() {
-        init();
         PluginUtil.addPlugin(plugin, 25979);
-        boxes = loadDataContainer(new DataContainer<String, GiftBox>(this, DataType.CUSTOM, "data"), GiftBox.class);
+        boxes = loadDataContainer(new DataContainer<>(this, DataType.CUSTOM, "data"), GiftBox.class);
     }
 
     @Override
@@ -36,6 +38,6 @@ public class ConsumeBox extends DPlugin {
 
     @Override
     public void onDisable() {
-        saveDataContainer();
+        saveAllData();
     }
 }

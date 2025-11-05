@@ -1,7 +1,7 @@
 name: DP-ConsumeBox
-version: 2.0.0
+version: 2.1.0
 main: com.blueearthcat.dpcb.ConsumeBox
-api-version: 1.16
+api-version: 1.20
 authors: [ BlueEarthCat ]
 depend:
   - DPP-Core
