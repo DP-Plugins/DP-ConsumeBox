@@ -64,6 +64,7 @@ public class DPCBFunction {
         inv.setPages(maxPage);
         inv.setPageTools(getPageTools(inv));
         for (int i = 0; i < box.getItems().size(); i++) {
+            if(box.getItems().get(i) == null) continue;
             inv.setPageContent(i, box.getItems().get(i));
         }
         inv.setObj(name);
