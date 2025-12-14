@@ -60,7 +60,12 @@ public class DPCBEvent implements Listener {
                     return;
                 }
                 ItemStack temp = item.clone();
-                ItemStack selected = DPCBFunction.getSelectedItem().clone();
+                ItemStack selected = DPCBFunction.getSelectedItem();
+                if (selected == null || selected.getType().isAir()) {
+                    p.sendMessage(plugin.getPrefix() + "§cThe selected item is not set! Please contact an administrator.");
+                    return;
+                }
+                selected = selected.clone();
                 e.setCurrentItem(NBT.setItemStackTag(selected, "dpcb_selected", temp));
                 inv.applyChanges();
                 inv.update();

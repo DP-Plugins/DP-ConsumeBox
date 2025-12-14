@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -353,6 +354,11 @@ public class DPCBFunction {
         }
         Box box = plugin.data.get(name);
         if (box.getType() == BoxType.SELECT) {
+            ItemStack selected = DPCBFunction.getSelectedItem();
+            if (selected == null || selected.getType().isAir()) {
+                p.sendMessage(plugin.getPrefix() + "§cThe selected item is not set! Please contact an administrator.");
+                return;
+            }
             box.openSelectInventory(p);
         } else if (box.getType() == BoxType.RANDOM) {
             giveRandomReward(p, name);
@@ -405,6 +411,7 @@ public class DPCBFunction {
         }
     }
 
+    @Nullable
     public static ItemStack getSelectedItem() {
         return plugin.getConfig().getItemStack("Settings.SelectedItem");
     }
