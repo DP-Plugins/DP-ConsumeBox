@@ -55,14 +55,14 @@ public class DPCBEvent implements Listener {
                     return;
                 }
                 if (plugin.currentSelectedCount.getOrDefault(p.getUniqueId(), 0) >= maxRewards) {
-                    p.sendMessage(plugin.getPrefix() + "§cYou have reached the maximum number of selections for this box!");
-                    p.sendMessage(plugin.getPrefix() + "§eClick the §a§lConfirm §eto receive your rewards.");
+                    p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_max_selection_reached"));
+                    p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_click_confirm"));
                     return;
                 }
                 ItemStack temp = item.clone();
                 ItemStack selected = DPCBFunction.getSelectedItem();
                 if (selected == null || selected.getType().isAir()) {
-                    p.sendMessage(plugin.getPrefix() + "§cThe selected item is not set! Please contact an administrator.");
+                    p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_selected_item_not_set"));
                     return;
                 }
                 selected = selected.clone();

@@ -20,7 +20,7 @@ public class ConsumeBox extends DPlugin {
     public HashMap<UUID, Tuple<DInventory, DInventory.PageItemSet>> currentWeightSet = new HashMap<>();
 
     public ConsumeBox() {
-        super(false);
+        super(true);
         plugin = this;
         init();
         data = loadDataContainer(new DataContainer<>(this, DataType.CUSTOM, "data"), Box.class);

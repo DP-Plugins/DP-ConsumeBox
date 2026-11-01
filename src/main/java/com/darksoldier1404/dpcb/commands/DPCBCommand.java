@@ -20,7 +20,7 @@ public class DPCBCommand {
     public static void init() {
         final CommandBuilder builder = new CommandBuilder(plugin);
 
-        builder.beginSubCommand("create", "/dpcb create <name> <type> - Create a new Consume Box")
+        builder.beginSubCommand("create", plugin.getLang().get("command_create_description"))
                 .withPermission("dpcb.admin")
                 .withArgument(ARG_0, ArgumentType.STRING)
                 .withArgument(ARG_1, ArgumentType.STRING, Arrays.stream(BoxType.values()).map(Enum::name).collect(Collectors.toList()))
@@ -30,7 +30,7 @@ public class DPCBCommand {
                     DPCBFunction.createBox(p, name, type);
                     return true;
                 });
-        builder.beginSubCommand("items", "/dpcb items <name> - Edit items an existing Consume Box")
+        builder.beginSubCommand("items", plugin.getLang().get("command_items_description"))
                 .withPermission("dpcb.admin")
                 .withArgument(ARG_0, ArgumentType.STRING, ConsumeBox.data.keySet())
                 .executesPlayer((p, args) -> {
@@ -39,7 +39,7 @@ public class DPCBCommand {
                     return true;
                 });
 
-        builder.beginSubCommand("maxpage", "/dpcb maxpage <name> <page> - Set maximum page for a specific Consume Box")
+        builder.beginSubCommand("maxpage", plugin.getLang().get("command_max_page_description"))
                 .withPermission("dpcb.admin")
                 .withArgument(ARG_0, ArgumentType.STRING, ConsumeBox.data.keySet())
                 .withArgument(ARG_1, ArgumentType.INTEGER)
@@ -50,21 +50,21 @@ public class DPCBCommand {
                     return true;
                 });
 
-        builder.beginSubCommand("setSelectedItem", "/dpcb setSelectedItem - Set selected item for SELECT type Consume Box")
+        builder.beginSubCommand("setSelectedItem", plugin.getLang().get("command_set_selected_item_description"))
                 .withPermission("dpcb.admin")
                 .executesPlayer((p, args) -> {
                     DPCBFunction.openSelectedItemEditor(p);
                     return true;
                 });
 
-        builder.beginSubCommand("setDefaultCoupon", "/dpcb setDefaultCoupon - Set default coupon item for all Consume Box")
+        builder.beginSubCommand("setDefaultCoupon", plugin.getLang().get("command_set_default_coupon_description"))
                 .withPermission("dpcb.admin")
                 .executesPlayer((p, args) -> {
                     DPCBFunction.openDefaultCouponEditor(p);
                     return true;
                 });
 
-        builder.beginSubCommand("setCoupon", "/dpcb setCoupon <name> - Set coupon item for a specific Consume Box")
+        builder.beginSubCommand("setCoupon", plugin.getLang().get("command_set_coupon_description"))
                 .withPermission("dpcb.admin")
                 .withArgument(ARG_0, ArgumentType.STRING, ConsumeBox.data.keySet())
                 .executesPlayer((p, args) -> {
@@ -73,7 +73,7 @@ public class DPCBCommand {
                     return true;
                 });
 
-        builder.beginSubCommand("remove", "/dpcb remove <name> - Remove an existing Consume Box")
+        builder.beginSubCommand("remove", plugin.getLang().get("command_remove_description"))
                 .withPermission("dpcb.admin")
                 .withArgument(ARG_0, ArgumentType.STRING, ConsumeBox.data.keySet())
                 .executesPlayer((p, args) -> {
@@ -82,7 +82,7 @@ public class DPCBCommand {
                     return true;
                 });
 
-        builder.beginSubCommand("type", "/dpcb type <name> <type> - Change the type of an existing Consume Box")
+        builder.beginSubCommand("type", plugin.getLang().get("command_type_description"))
                 .withPermission("dpcb.admin")
                 .withArgument(ARG_0, ArgumentType.STRING, ConsumeBox.data.keySet())
                 .withArgument(ARG_1, ArgumentType.STRING, Arrays.stream(BoxType.values()).map(Enum::name).collect(Collectors.toList()))
@@ -92,7 +92,7 @@ public class DPCBCommand {
                     DPCBFunction.changeBoxType(p, name, type);
                     return true;
                 });
-        builder.beginSubCommand("randomType", "/dpcb randomType <name> <randomType> - Set random type for a specific Consume Box")
+        builder.beginSubCommand("randomType", plugin.getLang().get("command_random_type_description"))
                 .withPermission("dpcb.admin")
                 .withArgument(ARG_0, ArgumentType.STRING, ConsumeBox.data.keySet())
                 .withArgument(ARG_1, ArgumentType.STRING, Arrays.stream(RandomType.values()).map(Enum::name).collect(Collectors.toList()))
@@ -103,7 +103,7 @@ public class DPCBCommand {
                     return true;
                 });
 
-        builder.beginSubCommand("weight", "/dpcb weight <name> - Open weight editor for a specific Consume Box")
+        builder.beginSubCommand("weight", plugin.getLang().get("command_weight_description"))
                 .withPermission("dpcb.admin")
                 .withArgument(ARG_0, ArgumentType.STRING, ConsumeBox.data.keySet())
                 .executesPlayer((p, args) -> {
@@ -112,7 +112,7 @@ public class DPCBCommand {
                     return true;
                 });
 
-        builder.beginSubCommand("rewardAmount", "/dpcb rewardAmount <name> <amount> - Set reward amount for a specific Consume Box")
+        builder.beginSubCommand("rewardAmount", plugin.getLang().get("command_reward_amount_description"))
                 .withPermission("dpcb.admin")
                 .withArgument(ARG_0, ArgumentType.STRING, ConsumeBox.data.keySet())
                 .withArgument(ARG_1, ArgumentType.INTEGER)
@@ -123,7 +123,7 @@ public class DPCBCommand {
                     return true;
                 });
 
-        builder.beginSubCommand("giveCoupon", "/dpcb giveCoupon <name> <player> <amount> - Give coupon item of a specific Consume Box to a player")
+        builder.beginSubCommand("giveCoupon", plugin.getLang().get("command_give_coupon_description"))
                 .withPermission("dpcb.admin")
                 .withArgument(ARG_0, ArgumentType.STRING, ConsumeBox.data.keySet())
                 .withArgument(ARG_1, ArgumentType.OFFLINE_PLAYER)
@@ -136,14 +136,14 @@ public class DPCBCommand {
                     return true;
                 });
 
-        builder.beginSubCommand("list", "/dpcb list - List all Consume Boxes")
+        builder.beginSubCommand("list", plugin.getLang().get("command_list_description"))
                 .withPermission("dpcb.admin")
                 .executesPlayer((p, args) -> {
                     DPCBFunction.listBoxes(p);
                     return true;
                 });
 
-        builder.beginSubCommand("reload", "/dpcb reload - Reload ConsumeBox plugin")
+        builder.beginSubCommand("reload", plugin.getLang().get("command_reload_description"))
                 .withPermission("dpcb.admin")
                 .executesPlayer((p, args) -> {
                     plugin.reload();
