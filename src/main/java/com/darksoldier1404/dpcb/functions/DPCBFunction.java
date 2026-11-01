@@ -32,22 +32,22 @@ public class DPCBFunction {
 
     public static void createBox(Player p, String name, BoxType type) {
         if (isExistingBox(name)) {
-            p.sendMessage(plugin.getPrefix() + "§cA box with that name already exists.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_box_already_exists"));
         } else {
             Box box = new Box(name, type, RandomType.SIMPLE, new DInventory(name, 54, true, plugin), null, 0);
             plugin.data.put(name, box);
-            p.sendMessage(plugin.getPrefix() + "§aConsume Box '" + name + "' of type '" + type.toString() + "' has been created.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_box_created", name, type.toString()));
         }
     }
 
     public static void editItems(Player p, String name) {
         if (!isExistingBox(name)) {
-            p.sendMessage(plugin.getPrefix() + "§cNo box found with that name.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_box_not_found"));
         } else {
             Box box = plugin.data.get(name);
             box.getInventory().setChannel(1);
             box.openInventory(p);
-            p.sendMessage(plugin.getPrefix() + "§aYou are now editing the items of the Consume Box '" + name + "'.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_edit_items", name));
         }
     }
 
@@ -58,7 +58,7 @@ public class DPCBFunction {
         box.setInventory(inv);
         plugin.data.put(box.getName(), box);
         plugin.data.save(box.getName());
-        p.sendMessage(plugin.getPrefix() + "§aItems for the Consume Box '" + box.getName() + "' have been saved.");
+        p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_items_saved", box.getName()));
     }
 
     public static ItemStack[] getPaneContent() {
@@ -75,7 +75,7 @@ public class DPCBFunction {
     }
 
     public static void openDefaultCouponEditor(Player p) {
-        DInventory inv = new DInventory("Default Coupon Item", 27, plugin);
+        DInventory inv = new DInventory(plugin.getLang().get("inventory_default_coupon_title"), 27, plugin);
         inv.setChannel(101);
         inv.setContents(getPaneContent());
         inv.setItem(13, plugin.getConfig().getItemStack("Settings.DefaultCouponItem"));
@@ -85,15 +85,15 @@ public class DPCBFunction {
     public static void saveDefaultCouponItem(Player p, ItemStack item) {
         plugin.getConfig().set("Settings.DefaultCouponItem", item);
         plugin.saveConfig();
-        p.sendMessage(plugin.getPrefix() + "§aDefault coupon item has been saved.");
+        p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_default_coupon_saved"));
     }
 
     public static void openCouponEditor(Player p, String name) {
         if (!isExistingBox(name)) {
-            p.sendMessage(plugin.getPrefix() + "§cNo box found with that name.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_box_not_found"));
         } else {
             Box box = plugin.data.get(name);
-            DInventory inv = new DInventory("Coupon Item - " + name, 27, plugin);
+            DInventory inv = new DInventory(plugin.getLang().getWithArgs("inventory_coupon_title", name), 27, plugin);
             inv.setChannel(201);
             inv.setObj(box);
             inv.setContents(getPaneContent());
@@ -108,18 +108,18 @@ public class DPCBFunction {
         box.setCouponItem(inv.getItem(13));
         plugin.data.put(box.getName(), box);
         plugin.data.save(box.getName());
-        p.sendMessage(plugin.getPrefix() + "§aCoupon item for the Consume Box '" + box.getName() + "' has been saved.");
+        p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_coupon_saved", box.getName()));
     }
 
     public static void changeBoxType(Player p, String name, BoxType type) {
         if (!isExistingBox(name)) {
-            p.sendMessage(plugin.getPrefix() + "§cNo box found with that name.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_box_not_found"));
         } else {
             Box box = plugin.data.get(name);
             box.setType(type);
             plugin.data.put(name, box);
             plugin.data.save(name);
-            p.sendMessage(plugin.getPrefix() + "§aConsume Box '" + name + "' type has been changed to '" + type.toString() + "'.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_type_changed", name, type.toString()));
         }
     }
 
@@ -164,6 +164,8 @@ public class DPCBFunction {
     public static void applyDefaultPageTools(DInventory inv) {
         int currentPage = inv.getCurrentPage();
         int pages = inv.getPages();
+        String pageInfo1 = String.valueOf(currentPage + 1);
+        String pageInfo2 = String.valueOf(pages + 1);
         ItemStack[] defaultPageTools = new ItemStack[9];
         ItemStack pane = NBT.setStringTag(new ItemStack(org.bukkit.Material.BLACK_STAINED_GLASS_PANE), "dppc_clickcancel", "true");
         ItemMeta meta = pane.getItemMeta();
@@ -173,18 +175,18 @@ public class DPCBFunction {
         ItemStack nextPage = NBT.setStringTag(new ItemStack(org.bukkit.Material.ARROW), "dppc_clickcancel", "true");
         nextPage = NBT.setStringTag(nextPage, "dppc_nextpage", "true");
         ItemMeta nextMeta = nextPage.getItemMeta();
-        nextMeta.setDisplayName("§aNext Page (" + (currentPage + 1) + "/" + (pages + 1) + ")");
+        nextMeta.setDisplayName(plugin.getLang().getWithArgs("item_next_page", pageInfo1, pageInfo2));
         nextMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         nextPage.setItemMeta(nextMeta);
         ItemStack prevPage = NBT.setStringTag(new ItemStack(org.bukkit.Material.ARROW), "dppc_clickcancel", "true");
         prevPage = NBT.setStringTag(prevPage, "dppc_prevpage", "true");
         ItemMeta prevMeta = prevPage.getItemMeta();
-        prevMeta.setDisplayName("§aPrevious Page (" + (currentPage + 1) + "/" + (pages + 1) + ")");
+        prevMeta.setDisplayName(plugin.getLang().getWithArgs("item_prev_page", pageInfo1, pageInfo2));
         prevMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         prevPage.setItemMeta(prevMeta);
         ItemStack confirmButton = NBT.setStringTag(new ItemStack(org.bukkit.Material.GREEN_WOOL), "dpcb_confirm", "true");
         ItemMeta confirmMeta = confirmButton.getItemMeta();
-        confirmMeta.setDisplayName("§aConfirm");
+        confirmMeta.setDisplayName(plugin.getLang().get("item_confirm"));
         confirmMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         confirmButton.setItemMeta(confirmMeta);
         defaultPageTools[0] = pane; // Slot 0
@@ -201,7 +203,7 @@ public class DPCBFunction {
 
     public static void setMaxPage(Player p, String name, int page) {
         if (!isExistingBox(name)) {
-            p.sendMessage(plugin.getPrefix() + "§cNo box found with that name.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_box_not_found"));
         } else {
             Box box = plugin.data.get(name);
             DInventory inv = box.getInventory();
@@ -209,41 +211,41 @@ public class DPCBFunction {
             box.setInventory(inv);
             plugin.data.put(name, box);
             plugin.data.save(name);
-            p.sendMessage(plugin.getPrefix() + "§aMaximum page for the Consume Box '" + name + "' has been set to " + page + ".");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_max_page_set", name, String.valueOf(page)));
         }
     }
 
     public static void setRewardAmount(Player p, String name, int amount) {
         if (!isExistingBox(name)) {
-            p.sendMessage(plugin.getPrefix() + "§cNo box found with that name.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_box_not_found"));
         } else {
             Box box = plugin.data.get(name);
             box.setRewardAmount(amount);
             plugin.data.put(name, box);
             plugin.data.save(name);
-            p.sendMessage(plugin.getPrefix() + "§aReward amount for the Consume Box '" + name + "' has been set to " + amount + ".");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_reward_amount_set", name, String.valueOf(amount)));
         }
     }
 
     public static void giveRandomReward(Player p, String name) {
         if (!isExistingBox(name)) {
-            p.sendMessage(plugin.getPrefix() + "§cNo box found with that name.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_box_not_found"));
         }
         Box box = plugin.data.get(name);
         ItemStack coupon = p.getInventory().getItemInMainHand();
         if (!isValidCoupon(coupon, box.getName())) {
-            p.sendMessage(plugin.getPrefix() + "§cYou are not holding a valid coupon for this Consume Box.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_invalid_coupon"));
             return;
         }
         int amount = box.getRewardAmount();
         if (amount == 0) {
-            p.sendMessage(plugin.getPrefix() + "§cThe reward amount for the Consume Box '" + name + "' is set to 0. Please set a valid reward amount.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_reward_amount_zero", name));
             return;
         }
         List<ItemStack> rewards = getRandomItems(box, amount);
         if (!InventoryUtils.hasEnoughSpace(p.getInventory().getStorageContents(), rewards)) {
-            p.sendMessage(plugin.getPrefix() + "§cYou do not have enough inventory space to receive the rewards.");
-            p.sendMessage(plugin.getPrefix() + "§cYou need at least " + amount + " empty slot(s).");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_not_enough_space"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_need_empty_slots", String.valueOf(amount)));
             return;
         }
         for (ItemStack reward : rewards) {
@@ -252,28 +254,28 @@ public class DPCBFunction {
             }
         }
         coupon.setAmount(coupon.getAmount() - 1);
-        p.sendMessage(plugin.getPrefix() + "§aYou have received " + amount + " random item(s) from the Consume Box '" + name + "'.");
+        p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_random_reward_received", String.valueOf(amount), name));
     }
 
     public static void giveGiftReward(Player p, String name) {
         if (!isExistingBox(name)) {
-            p.sendMessage(plugin.getPrefix() + "§cNo box found with that name.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_box_not_found"));
         }
         Box box = plugin.data.get(name);
         ItemStack coupon = p.getInventory().getItemInMainHand();
         if (!isValidCoupon(coupon, box.getName())) {
-            p.sendMessage(plugin.getPrefix() + "§cYou are not holding a valid coupon for this Consume Box.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_invalid_coupon"));
             return;
         }
         List<ItemStack> rewards = box.getInventory().getAllPageItems();
         int amount = rewards.size();
         if (amount == 0) {
-            p.sendMessage(plugin.getPrefix() + "§cThe reward amount for the Consume Box '" + name + "' is set to 0. Please set a valid reward amount.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_reward_amount_zero", name));
             return;
         }
         if (!InventoryUtils.hasEnoughSpace(p.getInventory().getStorageContents(), rewards)) {
-            p.sendMessage(plugin.getPrefix() + "§cYou do not have enough inventory space to receive the rewards.");
-            p.sendMessage(plugin.getPrefix() + "§cYou need at least " + amount + " empty slot(s).");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_not_enough_space"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_need_empty_slots", String.valueOf(amount)));
             return;
         }
         for (ItemStack reward : rewards) {
@@ -282,11 +284,11 @@ public class DPCBFunction {
             }
         }
         coupon.setAmount(coupon.getAmount() - 1);
-        p.sendMessage(plugin.getPrefix() + "§aYou have received all items from the Consume Box '" + name + "'.");
+        p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_gift_reward_received", name));
     }
 
     public static void openSelectedItemEditor(Player p) {
-        DInventory inv = new DInventory("Selected Item Editor", 27, plugin);
+        DInventory inv = new DInventory(plugin.getLang().get("inventory_selected_item_title"), 27, plugin);
         inv.setChannel(301);
         inv.setContents(getPaneContent());
         inv.setItem(13, plugin.getConfig().getItemStack("Settings.SelectedItem"));
@@ -297,18 +299,18 @@ public class DPCBFunction {
         ItemStack selectedItem = inv.getItem(13);
         plugin.getConfig().set("Settings.SelectedItem", selectedItem);
         plugin.saveConfig();
-        p.sendMessage(plugin.getPrefix() + "§aSelected item has been saved.");
+        p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_selected_item_saved"));
     }
 
     public static void giveSelectedReward(Player p, DInventory inv) {
         if (inv.getObj() == null || !(inv.getObj() instanceof Box)) {
-            p.sendMessage(plugin.getPrefix() + "§cInvalid Consume Box.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_invalid_box"));
             return;
         }
         Box box = (Box) inv.getObj();
         ItemStack coupon = p.getInventory().getItemInMainHand();
         if (!isValidCoupon(coupon, box.getName())) {
-            p.sendMessage(plugin.getPrefix() + "§cYou are not holding a valid coupon for this Consume Box.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_invalid_coupon"));
             return;
         }
         List<ItemStack> selectedItems = new ArrayList<>();
@@ -318,12 +320,12 @@ public class DPCBFunction {
             }
         }
         if (selectedItems.isEmpty()) {
-            p.sendMessage(plugin.getPrefix() + "§cNo selected items found in the Consume Box.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_no_selected_items"));
             return;
         }
         if (!InventoryUtils.hasEnoughSpace(p.getInventory().getStorageContents(), selectedItems)) {
-            p.sendMessage(plugin.getPrefix() + "§cYou do not have enough inventory space to receive the rewards.");
-            p.sendMessage(plugin.getPrefix() + "§cYou need at least " + selectedItems.size() + " empty slot(s).");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_not_enough_space"));
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_need_empty_slots", String.valueOf(selectedItems.size())));
             return;
         }
         coupon.setAmount(coupon.getAmount() - 1);
@@ -333,7 +335,7 @@ public class DPCBFunction {
             }
         }
         p.closeInventory();
-        p.sendMessage(plugin.getPrefix() + "§aYou have received " + selectedItems.size() + " selected item(s) from the Consume Box.");
+        p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_select_reward_received", String.valueOf(selectedItems.size())));
     }
 
     public static boolean isValidCoupon(ItemStack item, String boxName) {
@@ -349,14 +351,14 @@ public class DPCBFunction {
     public static void handleCouponUse(Player p, ItemStack item) {
         String name = NBT.getStringTag(item, "dpcb_name");
         if (!isExistingBox(name)) {
-            p.sendMessage(plugin.getPrefix() + "§cNo box found with that name.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_box_not_found"));
             return;
         }
         Box box = plugin.data.get(name);
         if (box.getType() == BoxType.SELECT) {
             ItemStack selected = DPCBFunction.getSelectedItem();
             if (selected == null || selected.getType().isAir()) {
-                p.sendMessage(plugin.getPrefix() + "§cThe selected item is not set! Please contact an administrator.");
+                p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_selected_item_not_set"));
                 return;
             }
             box.openSelectInventory(p);
@@ -369,15 +371,15 @@ public class DPCBFunction {
 
     public static void giveCoupon(Player p, String name, OfflinePlayer target, int amount) {
         if (!isExistingBox(name)) {
-            p.sendMessage(plugin.getPrefix() + "§cNo box found with that name.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_box_not_found"));
             return;
         }
         if (!target.isOnline()) {
-            p.sendMessage(plugin.getPrefix() + "§cThe target player is not online.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_target_not_online"));
             return;
         }
         if (amount <= 0) {
-            p.sendMessage(plugin.getPrefix() + "§cAmount must be greater than 0.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_amount_must_be_positive"));
             return;
         }
         Box box = plugin.data.get(name);
@@ -386,7 +388,7 @@ public class DPCBFunction {
             couponItem = plugin.getConfig().getItemStack("Settings.DefaultCouponItem");
         }
         if (couponItem == null || couponItem.getType().isAir()) {
-            p.sendMessage(plugin.getPrefix() + "§cNo coupon item is set for this Consume Box. also the default coupon item is not set.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_no_coupon_item_set"));
             return;
         }
         ItemStack coupon = couponItem.clone();
@@ -394,20 +396,20 @@ public class DPCBFunction {
         coupon = NBT.setStringTag(coupon, "dpcb_name", name);
         Player targetPlayer = (Player) target;
         if (!InventoryUtils.hasEnoughSpace(targetPlayer.getInventory().getStorageContents(), coupon)) {
-            p.sendMessage(plugin.getPrefix() + "§cThe target player does not have enough inventory space to receive the coupons.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_target_not_enough_space"));
             return;
         }
         targetPlayer.getInventory().addItem(coupon);
-        p.sendMessage(plugin.getPrefix() + "§aYou have given " + amount + " coupon(s) of the Consume Box '" + name + "' to " + target.getName() + ".");
-        targetPlayer.sendMessage(plugin.getPrefix() + "§aYou have received " + amount + " coupon(s) for the Consume Box '" + name + "' from " + p.getName() + ".");
+        p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_coupon_given", String.valueOf(amount), name, target.getName()));
+        targetPlayer.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_coupon_received", String.valueOf(amount), name, p.getName()));
     }
 
     public static void removeBox(Player p, String name) {
         if (!isExistingBox(name)) {
-            p.sendMessage(plugin.getPrefix() + "§cNo box found with that name.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_box_not_found"));
         } else {
             plugin.data.delete(name);
-            p.sendMessage(plugin.getPrefix() + "§aConsume Box '" + name + "' has been removed.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_box_removed", name));
         }
     }
 
@@ -418,25 +420,25 @@ public class DPCBFunction {
 
     public static void setWeightWithChat(Player p, DInventory inv, DInventory.PageItemSet pis) {
         plugin.currentWeightSet.put(p.getUniqueId(), Tuple.of(inv, pis));
-        p.sendMessage(plugin.getPrefix() + "§aPlease enter the weight for the page: " + pis.getPage() + ", slot: " + pis.getSlot() + " in the chat.");
-        p.sendMessage(plugin.getPrefix() + "§aType §e0 §ato remove the weight.");
+        p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_weight_prompt", String.valueOf(pis.getPage()), String.valueOf(pis.getSlot())));
+        p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_weight_prompt_remove"));
         p.closeInventory();
     }
 
     public static void applyWeightSet(Player p, String sWeight) {
         if (!plugin.currentWeightSet.containsKey(p.getUniqueId())) {
-            p.sendMessage(plugin.getPrefix() + "§cNo weight setting in progress.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_weight_none_in_progress"));
             return;
         }
         int weight;
         try {
             weight = Integer.parseInt(sWeight);
             if (weight < 0) {
-                p.sendMessage(plugin.getPrefix() + "§cWeight must be a non-negative integer.");
+                p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_weight_negative"));
                 return;
             }
         } catch (NumberFormatException e) {
-            p.sendMessage(plugin.getPrefix() + "§cInvalid weight. Please enter a valid non-negative integer.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_weight_invalid"));
             return;
         }
         Tuple<DInventory, DInventory.PageItemSet> tuple = plugin.currentWeightSet.get(p.getUniqueId());
@@ -444,7 +446,7 @@ public class DPCBFunction {
         DInventory.PageItemSet pis = tuple.getB();
         ItemStack item = pis.getItem();
         if (item == null || item.getType().isAir()) {
-            p.sendMessage(plugin.getPrefix() + "§cInvalid item for weight setting.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_weight_invalid_item"));
             plugin.currentWeightSet.remove(p.getUniqueId());
             return;
         }
@@ -455,13 +457,13 @@ public class DPCBFunction {
         if (weight == 0) {
             plugin.data.put(box.getName(), box);
             plugin.data.save(box.getName());
-            p.sendMessage(plugin.getPrefix() + "§aWeight for page: " + pis.getPage() + ", slot: " + pis.getSlot() + " has been removed.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_weight_removed", String.valueOf(pis.getPage()), String.valueOf(pis.getSlot())));
         } else {
             bw.setWeight(weight);
             box.getWeightList().add(bw);
             plugin.data.put(box.getName(), box);
             plugin.data.save(box.getName());
-            p.sendMessage(plugin.getPrefix() + "§aWeight for page: " + pis.getPage() + ", slot: " + pis.getSlot() + " has been set to " + weight + ".");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_weight_set", String.valueOf(pis.getPage()), String.valueOf(pis.getSlot()), String.valueOf(weight)));
         }
         Bukkit.getScheduler().runTaskLater(plugin, () -> box.openWeightEditInventory(p, inv.getCurrentPage()), 1L);
     }
@@ -481,9 +483,9 @@ public class DPCBFunction {
             int weight = box.findWeight(pis.getPage(), pis.getSlot());
             List<String> lore = item.getItemMeta() != null && item.getItemMeta().getLore() != null ? item.getItemMeta().getLore() : new ArrayList<>();
             if (weight > 0) {
-                lore.add("§7Weight: §e" + weight);
+                lore.add(plugin.getLang().getWithArgs("lore_weight", String.valueOf(weight)));
                 double chance = (double) weight / (double) totalWeight * 100.0;
-                lore.add("§7Chance: §e" + String.format("%.2f", chance) + "%");
+                lore.add(plugin.getLang().getWithArgs("lore_chance", String.format("%.2f", chance)));
             }
             ItemMeta meta = item.getItemMeta();
             meta.setLore(lore);
@@ -496,35 +498,38 @@ public class DPCBFunction {
 
     public static void setRandomType(Player p, String name, RandomType randomType) {
         if (!isExistingBox(name)) {
-            p.sendMessage(plugin.getPrefix() + "§cNo box found with that name.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_box_not_found"));
         } else {
             Box box = plugin.data.get(name);
             box.setRandomType(randomType);
             plugin.data.put(name, box);
             plugin.data.save(name);
-            p.sendMessage(plugin.getPrefix() + "§aConsume Box '" + name + "' random type has been changed to '" + randomType.toString() + "'.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_random_type_changed", name, randomType.toString()));
         }
     }
 
     public static void openWeightEditor(Player p, String name) {
         if (!isExistingBox(name)) {
-            p.sendMessage(plugin.getPrefix() + "§cNo box found with that name.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_box_not_found"));
         } else {
             Box box = plugin.data.get(name);
             box.openWeightEditInventory(p, 0);
-            p.sendMessage(plugin.getPrefix() + "§aYou are now editing the weights of the Consume Box '" + name + "'.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().getWithArgs("message_edit_weights", name));
         }
     }
 
     public static void listBoxes(Player p) {
         if (plugin.data.isEmpty()) {
-            p.sendMessage(plugin.getPrefix() + "§eNo Consume Boxes available.");
+            p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_list_empty"));
             return;
         }
-        p.sendMessage(plugin.getPrefix() + "§aAvailable Consume Boxes:");
+        p.sendMessage(plugin.getPrefix() + plugin.getLang().get("message_list_header"));
         for (String boxName : plugin.data.keySet()) {
             Box box = plugin.data.get(boxName);
-            p.sendMessage("§e- " + boxName + " §7(Type: " + box.getType().toString() + ", RandomType: " + box.getRandomType().toString() + ", RewardAmount: " + box.getRewardAmount() + ", CouponItem: " + (box.getCouponItem() != null ? "Set" : "Not Set") + ", Pages: " + (box.getInventory() != null ? box.getInventory().getPages() : 0) + ", Total Items: " + (box.getInventory() != null ? box.getInventory().getAllPageItems().stream().filter(item -> item != null && item.getType() != Material.AIR).count() : 0) + ")");
+            String couponState = plugin.getLang().get(box.getCouponItem() != null ? "value_set" : "value_not_set");
+            int pages = box.getInventory() != null ? box.getInventory().getPages() : 0;
+            long totalItems = box.getInventory() != null ? box.getInventory().getAllPageItems().stream().filter(item -> item != null && item.getType() != Material.AIR).count() : 0;
+            p.sendMessage(plugin.getLang().getWithArgs("message_list_entry", boxName, box.getType().toString(), box.getRandomType().toString(), String.valueOf(box.getRewardAmount()), couponState, String.valueOf(pages), String.valueOf(totalItems)));
         }
     }
 }

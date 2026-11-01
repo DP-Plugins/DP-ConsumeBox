@@ -1,0 +1,84 @@
+# Commands
+command_create_description: "/dpcb create <name> <type> - Create a new Consume Box"
+command_items_description: "/dpcb items <name> - Edit items an existing Consume Box"
+command_max_page_description: "/dpcb maxpage <name> <page> - Set maximum page for a specific Consume Box"
+command_set_selected_item_description: "/dpcb setSelectedItem - Set selected item for SELECT type Consume Box"
+command_set_default_coupon_description: "/dpcb setDefaultCoupon - Set default coupon item for all Consume Box"
+command_set_coupon_description: "/dpcb setCoupon <name> - Set coupon item for a specific Consume Box"
+command_remove_description: "/dpcb remove <name> - Remove an existing Consume Box"
+command_type_description: "/dpcb type <name> <type> - Change the type of an existing Consume Box"
+command_random_type_description: "/dpcb randomType <name> <randomType> - Set random type for a specific Consume Box"
+command_weight_description: "/dpcb weight <name> - Open weight editor for a specific Consume Box"
+command_reward_amount_description: "/dpcb rewardAmount <name> <amount> - Set reward amount for a specific Consume Box"
+command_give_coupon_description: "/dpcb giveCoupon <name> <player> <amount> - Give coupon item of a specific Consume Box to a player"
+command_list_description: "/dpcb list - List all Consume Boxes"
+command_reload_description: "/dpcb reload - Reload ConsumeBox plugin"
+
+# Inventory titles
+inventory_default_coupon_title: "Default Coupon Item"
+inventory_coupon_title: "Coupon Item - {0}"
+inventory_selected_item_title: "Selected Item Editor"
+
+# Item names
+item_next_page: "§aNext Page ({0}/{1})"
+item_prev_page: "§aPrevious Page ({0}/{1})"
+item_confirm: "§aConfirm"
+
+# Item lore
+lore_weight: "§7Weight: §e{0}"
+lore_chance: "§7Chance: §e{0}%"
+
+# Box management
+message_box_already_exists: "§cA box with that name already exists."
+message_box_not_found: "§cNo box found with that name."
+message_box_created: "§aConsume Box '{0}' of type '{1}' has been created."
+message_box_removed: "§aConsume Box '{0}' has been removed."
+message_edit_items: "§aYou are now editing the items of the Consume Box '{0}'."
+message_items_saved: "§aItems for the Consume Box '{0}' have been saved."
+message_type_changed: "§aConsume Box '{0}' type has been changed to '{1}'."
+message_random_type_changed: "§aConsume Box '{0}' random type has been changed to '{1}'."
+message_max_page_set: "§aMaximum page for the Consume Box '{0}' has been set to {1}."
+message_reward_amount_set: "§aReward amount for the Consume Box '{0}' has been set to {1}."
+message_invalid_box: "§cInvalid Consume Box."
+
+# Coupon / selected item
+message_default_coupon_saved: "§aDefault coupon item has been saved."
+message_coupon_saved: "§aCoupon item for the Consume Box '{0}' has been saved."
+message_selected_item_saved: "§aSelected item has been saved."
+message_selected_item_not_set: "§cThe selected item is not set! Please contact an administrator."
+message_no_coupon_item_set: "§cNo coupon item is set for this Consume Box, and the default coupon item is not set either."
+message_invalid_coupon: "§cYou are not holding a valid coupon for this Consume Box."
+message_amount_must_be_positive: "§cAmount must be greater than 0."
+message_target_not_online: "§cThe target player is not online."
+message_target_not_enough_space: "§cThe target player does not have enough inventory space to receive the coupons."
+message_coupon_given: "§aYou have given {0} coupon(s) of the Consume Box '{1}' to {2}."
+message_coupon_received: "§aYou have received {0} coupon(s) for the Consume Box '{1}' from {2}."
+
+# Rewards
+message_reward_amount_zero: "§cThe reward amount for the Consume Box '{0}' is set to 0. Please set a valid reward amount."
+message_not_enough_space: "§cYou do not have enough inventory space to receive the rewards."
+message_need_empty_slots: "§cYou need at least {0} empty slot(s)."
+message_random_reward_received: "§aYou have received {0} random item(s) from the Consume Box '{1}'."
+message_gift_reward_received: "§aYou have received all items from the Consume Box '{0}'."
+message_select_reward_received: "§aYou have received {0} selected item(s) from the Consume Box."
+message_no_selected_items: "§cNo selected items found in the Consume Box."
+message_max_selection_reached: "§cYou have reached the maximum number of selections for this box!"
+message_click_confirm: "§eClick the §a§lConfirm §eto receive your rewards."
+
+# Weight
+message_weight_prompt: "§aPlease enter the weight for the page: {0}, slot: {1} in the chat."
+message_weight_prompt_remove: "§aType §e0 §ato remove the weight."
+message_weight_none_in_progress: "§cNo weight setting in progress."
+message_weight_negative: "§cWeight must be a non-negative integer."
+message_weight_invalid: "§cInvalid weight. Please enter a valid non-negative integer."
+message_weight_invalid_item: "§cInvalid item for weight setting."
+message_weight_removed: "§aWeight for page: {0}, slot: {1} has been removed."
+message_weight_set: "§aWeight for page: {0}, slot: {1} has been set to {2}."
+message_edit_weights: "§aYou are now editing the weights of the Consume Box '{0}'."
+
+# List
+message_list_empty: "§eNo Consume Boxes available."
+message_list_header: "§aAvailable Consume Boxes:"
+message_list_entry: "§e- {0} §7(Type: {1}, RandomType: {2}, RewardAmount: {3}, CouponItem: {4}, Pages: {5}, Total Items: {6})"
+value_set: "Set"
+value_not_set: "Not Set"
